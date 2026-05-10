@@ -59,6 +59,10 @@ export interface AIPrediction {
   confidence: number;
 }
 
+export type AlertSeverity = "INFO" | "WARNING" | "CRITICAL";
+
+export type AlertSource = "sensor" | "ai";
+
 export interface AlertEvent {
   id: string;
   t: number;
@@ -66,5 +70,44 @@ export interface AlertEvent {
   buildingName: string;
   restroomType: RestroomType;
   level: StatusLevel;
+  severity: AlertSeverity;
+  source: AlertSource;
   message: string;
+  /** snapshot of the reading that triggered the alert */
+  reading: SensorReading;
+  /** optional AI prediction at the time of alert */
+  prediction?: AIPrediction;
+  /** acknowledgement state */
+  acknowledged: boolean;
+}
+
+export interface CleaningEvent {
+  id: string;
+  t: number;
+  restroomId: string;
+  buildingName: string;
+  restroomType: RestroomType;
+  /** trigger that drove the cleaning */
+  trigger: "scheduled" | "reactive" | "manual";
+  /** approximate duration in minutes (simulated) */
+  durationMin: number;
+  /** average odor before vs after */
+  odorBefore: number;
+  odorAfter: number;
+}
+
+export type Urgency = "low" | "medium" | "high" | "critical";
+
+export interface SanitationRecommendation {
+  urgency: Urgency;
+  /** estimated cleaning time in minutes */
+  estimatedMinutes: number;
+  /** whether the restroom should be temporarily closed */
+  closureRecommended: boolean;
+  /** dominant signal driving the recommendation */
+  primaryConcern: "ammonia" | "sulfur" | "voc" | "humidity" | "general";
+  tools: { name: string; required: boolean; reason?: string }[];
+  safety: { name: string; required: boolean; reason?: string }[];
+  procedure: string[];
+  aiNotes: string[];
 }

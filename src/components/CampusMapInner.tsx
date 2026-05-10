@@ -41,7 +41,6 @@ export function CampusMapInner({ states, selectedId, onSelect }: Props) {
       attributionControl: true,
       maxBounds: bounds,
       maxBoundsViscosity: 1,
-      preferCanvas: true,
     });
     mapRef.current = map;
 
@@ -87,7 +86,7 @@ export function CampusMapInner({ states, selectedId, onSelect }: Props) {
       let marker = markersRef.current.get(id);
       if (!marker) {
         marker = L.circleMarker([s.location.lat, s.location.lng], {
-          radius: 8,
+          radius: 9,
           color: "#0b1220",
           weight: 2,
           fillColor: style.color,
@@ -100,7 +99,7 @@ export function CampusMapInner({ states, selectedId, onSelect }: Props) {
         markersRef.current.set(id, marker);
       } else {
         marker.setStyle({ fillColor: style.color });
-        const el = marker.getElement?.();
+        const el = marker.getElement();
         if (el) {
           el.classList.toggle("csucc-marker-blink", style.blink);
         }

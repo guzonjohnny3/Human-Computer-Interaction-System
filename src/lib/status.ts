@@ -47,8 +47,8 @@ export const STATUS_STYLES: Record<StatusLevel, StatusStyle> = {
     color: "#ef4444",
     glow: "rgba(239,68,68,0.8)",
     text: "text-red-300",
-    chip: "bg-red-500/15 text-red-200 ring-1 ring-red-500/40",
-    blink: false,
+    chip: "bg-red-500/15 text-red-200 ring-1 ring-red-500/40 animate-pulse",
+    blink: true,
     rank: 3,
   },
   critical: {

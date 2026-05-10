@@ -1,4 +1,4 @@
-import type { RestroomLocation, SensorReading } from "./types";
+import type { CleaningEvent, RestroomLocation, SensorReading } from "./types";
 
 /**
  * Realistic IoT sensor simulation.
@@ -52,8 +52,17 @@ function nextOU(prev: number, target: number, theta: number, sigma: number): num
   return prev + theta * (target - prev) + sigma * (Math.random() - 0.5) * 2;
 }
 
+export interface TickResult {
+  reading: SensorReading;
+  cleaning: CleaningEvent | null;
+}
+
 /** Produce the next reading for a restroom at time `now`. */
-export function tickRestroom(loc: RestroomLocation, now: Date): SensorReading {
+export function tickRestroom(
+  loc: RestroomLocation,
+  now: Date,
+  opts: { recordCleaning?: boolean } = {},
+): TickResult {
   const k = loc.id;
   let s = STATE.get(k);
   if (!s) {
@@ -75,12 +84,28 @@ export function tickRestroom(loc: RestroomLocation, now: Date): SensorReading {
   const sinceReset = (now.getTime() - s.lastReset) / 60000; // minutes
   const badness = s.mq137 + s.mq136 * 1.4;
   const cleanChance = Math.max(0, badness - 25) / 1500 + (sinceReset > 240 ? 0.01 : 0);
+  let cleaning: CleaningEvent | null = null;
   if (Math.random() < cleanChance) {
+    const odorBefore = clamp(s.mq137 * 1.1 + s.mq136 * 1.0 + Math.max(0, s.mq135 - 60) * 0.25, 0, 100);
     s.mq135 *= 0.45;
     s.mq136 *= 0.35;
     s.mq137 *= 0.3;
     s.humidity = clamp(s.humidity - 6, 55, 95);
     s.lastReset = now.getTime();
+    const odorAfter = clamp(s.mq137 * 1.1 + s.mq136 * 1.0 + Math.max(0, s.mq135 - 60) * 0.25, 0, 100);
+    if (opts.recordCleaning) {
+      cleaning = {
+        id: `${loc.id}-${now.getTime()}`,
+        t: now.getTime(),
+        restroomId: loc.id,
+        buildingName: loc.buildingName,
+        restroomType: loc.type,
+        trigger: odorBefore > 70 ? "reactive" : "scheduled",
+        durationMin: Math.round(8 + (odorBefore / 100) * 22),
+        odorBefore: round1(odorBefore),
+        odorAfter: round1(odorAfter),
+      };
+    }
   }
 
   // targets influenced by traffic
@@ -111,14 +136,17 @@ export function tickRestroom(loc: RestroomLocation, now: Date): SensorReading {
   );
 
   return {
-    t: now.getTime(),
-    mq135: round1(s.mq135),
-    mq136: round1(s.mq136),
-    mq137: round1(s.mq137),
-    temperature: round1(s.temperature),
-    humidity: round1(s.humidity),
-    odor: round1(odor),
-    airQuality: round1(air),
+    reading: {
+      t: now.getTime(),
+      mq135: round1(s.mq135),
+      mq136: round1(s.mq136),
+      mq137: round1(s.mq137),
+      temperature: round1(s.temperature),
+      humidity: round1(s.humidity),
+      odor: round1(odor),
+      airQuality: round1(air),
+    },
+    cleaning,
   };
 }
 
@@ -132,7 +160,22 @@ export function seedHistory(loc: RestroomLocation, hours: number, stepMs: number
   const now = Date.now();
   const steps = Math.floor((hours * 3600 * 1000) / stepMs);
   for (let i = steps; i > 0; i--) {
-    out.push(tickRestroom(loc, new Date(now - i * stepMs)));
+    out.push(tickRestroom(loc, new Date(now - i * stepMs)).reading);
   }
   return out;
+}
+
+/** Force-clean a restroom (acknowledged janitor response). Returns the new reading. */
+export function forceClean(loc: RestroomLocation, now: Date): TickResult {
+  const s = STATE.get(loc.id);
+  if (s) {
+    s.mq135 *= 0.35;
+    s.mq136 *= 0.25;
+    s.mq137 *= 0.2;
+    s.humidity = clamp(s.humidity - 8, 55, 95);
+    s.lastReset = now.getTime();
+  }
+  const tick = tickRestroom(loc, now, { recordCleaning: true });
+  if (tick.cleaning) tick.cleaning.trigger = "manual";
+  return tick;
 }
