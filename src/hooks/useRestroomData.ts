@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { RESTROOMS } from "@/lib/buildings";
-import { forceClean, seedHistory, tickRestroom } from "@/lib/simulation";
+import { forceClean, injectHazard, seedHistory, tickRestroom } from "@/lib/simulation";
 import { statusOf } from "@/lib/status";
 import type {
   AIPrediction,
@@ -29,6 +29,7 @@ interface RestroomData {
   tickMs: number;
   acknowledgeAlert: (alertId: string) => void;
   dispatchJanitor: (restroomId: string) => CleaningEvent | null;
+  injectDemoHazard: (level?: "hazardous" | "critical") => RestroomState | null;
 }
 
 function severityFromStatus(s: StatusLevel): AlertSeverity {
@@ -229,6 +230,31 @@ export function useRestroomData(): RestroomData {
     [],
   );
 
+  const injectDemoHazard = useCallback(
+    (level: "hazardous" | "critical" = "critical"): RestroomState | null => {
+      // pick a deterministic-but-visible target: rotate through restrooms
+      // currently in the lowest-risk state to make the demo visible.
+      const safeOnes = states.filter((s) => s.status === "safe" || s.status === "moderate");
+      const pool = safeOnes.length > 0 ? safeOnes : states;
+      const target = pool[Math.floor(Math.random() * pool.length)];
+      const reading = injectHazard(target.location, level);
+      setStates((prev) =>
+        prev.map((s) =>
+          s.location.id === target.location.id
+            ? {
+                ...s,
+                current: reading,
+                history: [...s.history, reading].slice(-HISTORY_CAP),
+                status: statusOf(reading),
+              }
+            : s,
+        ),
+      );
+      return { ...target, current: reading, status: statusOf(reading) };
+    },
+    [states],
+  );
+
   return {
     states,
     predictions,
@@ -238,5 +264,6 @@ export function useRestroomData(): RestroomData {
     tickMs: TICK_MS,
     acknowledgeAlert,
     dispatchJanitor,
+    injectDemoHazard,
   };
 }

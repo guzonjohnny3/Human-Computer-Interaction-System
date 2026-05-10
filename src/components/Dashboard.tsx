@@ -24,6 +24,7 @@ export function Dashboard() {
     lastTick,
     tickMs,
     dispatchJanitor,
+    injectDemoHazard,
   } = useRestroomData();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [modalRestroomId, setModalRestroomId] = useState<string | null>(null);
@@ -66,7 +67,15 @@ export function Dashboard() {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:48px_48px]" />
       </div>
 
-      <Header summary={summary} lastTick={lastTick} tickMs={tickMs} />
+      <Header
+        summary={summary}
+        lastTick={lastTick}
+        tickMs={tickMs}
+        onInjectHazard={(level) => {
+          const target = injectDemoHazard(level);
+          if (target) setSelectedId(target.location.id);
+        }}
+      />
       <EmergencyBanner states={states} onSelect={openModalFor} />
 
       <main className="mx-auto max-w-[1600px] px-4 py-4 lg:px-6">

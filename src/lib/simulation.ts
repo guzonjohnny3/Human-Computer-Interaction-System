@@ -179,3 +179,22 @@ export function forceClean(loc: RestroomLocation, now: Date): TickResult {
   if (tick.cleaning) tick.cleaning.trigger = "manual";
   return tick;
 }
+
+/** Inject a hazardous spike — used to demo the alert + janitor pipeline. */
+export function injectHazard(loc: RestroomLocation, level: "hazardous" | "critical" = "critical"): SensorReading {
+  const s = STATE.get(loc.id);
+  if (s) {
+    if (level === "critical") {
+      s.mq137 = 70;
+      s.mq136 = 38;
+      s.mq135 = 180;
+      s.humidity = clamp(s.humidity + 8, 55, 100);
+    } else {
+      s.mq137 = 45;
+      s.mq136 = 28;
+      s.mq135 = 140;
+      s.humidity = clamp(s.humidity + 5, 55, 100);
+    }
+  }
+  return tickRestroom(loc, new Date()).reading;
+}

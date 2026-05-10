@@ -15,9 +15,10 @@ interface Props {
   summary: Summary;
   lastTick: number;
   tickMs: number;
+  onInjectHazard?: (level: "hazardous" | "critical") => void;
 }
 
-export function Header({ summary, lastTick, tickMs }: Props) {
+export function Header({ summary, lastTick, tickMs, onInjectHazard }: Props) {
   const [now, setNow] = useState<number>(() => Date.now());
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
@@ -69,6 +70,27 @@ export function Header({ summary, lastTick, tickMs }: Props) {
         <span className="rounded-md bg-slate-800/60 px-2 py-1 font-mono text-[10px] text-slate-300 ring-1 ring-slate-700/60">
           next tick in {nextIn}s
         </span>
+        {onInjectHazard && (
+          <div className="flex items-center gap-1 rounded-md bg-slate-900/60 px-1.5 py-1 ring-1 ring-amber-500/30">
+            <span className="text-[9px] font-bold uppercase tracking-widest text-amber-300">
+              Demo
+            </span>
+            <button
+              onClick={() => onInjectHazard("hazardous")}
+              className="rounded bg-red-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-200 ring-1 ring-red-500/40 hover:bg-red-500/25"
+              title="Inject a HAZARDOUS spike on a random clean restroom for demo purposes"
+            >
+              Haz
+            </button>
+            <button
+              onClick={() => onInjectHazard("critical")}
+              className="rounded bg-red-900/40 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-100 ring-1 ring-red-700/60 hover:bg-red-900/70"
+              title="Inject a CRITICAL spike on a random clean restroom for demo purposes"
+            >
+              Crit
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );
