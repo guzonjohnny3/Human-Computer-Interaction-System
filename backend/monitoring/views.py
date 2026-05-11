@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import json
+import mimetypes
 import time
+from pathlib import Path
 from queue import Empty
 
-from django.http import HttpResponse, StreamingHttpResponse
+from django.conf import settings
+from django.http import FileResponse, Http404, HttpResponse, StreamingHttpResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
@@ -163,7 +166,51 @@ def stream(_request) -> StreamingHttpResponse:
     return resp
 
 
+def _frontend_dir() -> Path | None:
+    """Return the directory holding the Next.js static export, or None."""
+    candidate = getattr(settings, "FRONTEND_OUT_DIR", None)
+    if candidate:
+        p = Path(candidate)
+        if p.exists():
+            return p
+    fallback = Path(settings.BASE_DIR).parent / "out"
+    return fallback if fallback.exists() else None
+
+
+def _serve_frontend_file(path: str) -> HttpResponse:
+    """Serve a single file from the Next.js static export."""
+    root = _frontend_dir()
+    if root is None:
+        raise Http404("frontend not built")
+    rel = (path or "").lstrip("/")
+    candidates: list[Path] = []
+    if rel:
+        candidates.append(root / rel)
+        candidates.append(root / f"{rel}.html")
+        candidates.append(root / rel / "index.html")
+    candidates.append(root / "index.html")
+    for c in candidates:
+        try:
+            resolved = c.resolve()
+        except OSError:
+            continue
+        if root.resolve() not in resolved.parents and resolved != root.resolve():
+            continue
+        if resolved.is_file():
+            ctype, _ = mimetypes.guess_type(str(resolved))
+            return FileResponse(resolved.open("rb"), content_type=ctype or "application/octet-stream")
+    raise Http404(path)
+
+
+def frontend(request, path: str = "") -> HttpResponse:
+    """Catch-all that serves the Next.js static export."""
+    return _serve_frontend_file(path)
+
+
 def index(_request) -> HttpResponse:
+    root = _frontend_dir()
+    if root is not None and (root / "index.html").is_file():
+        return _serve_frontend_file("")
     body = """<!doctype html>
 <html><head><meta charset='utf-8'><title>CSUCC Smart Restroom Backend</title>
 <style>body{background:#020617;color:#e2e8f0;font-family:system-ui,sans-serif;padding:32px;max-width:900px;margin:0 auto;line-height:1.6}
