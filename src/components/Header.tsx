@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { useAuth } from "@/hooks/useAuth";
+
 interface Summary {
   total: number;
   safe: number;
@@ -19,6 +21,7 @@ interface Props {
 }
 
 export function Header({ summary, lastTick, tickMs, onInjectHazard }: Props) {
+  const { session, logout } = useAuth();
   const [now, setNow] = useState<number>(() => Date.now());
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
@@ -70,7 +73,7 @@ export function Header({ summary, lastTick, tickMs, onInjectHazard }: Props) {
         <span className="rounded-md bg-slate-800/60 px-2 py-1 font-mono text-[10px] text-slate-300 ring-1 ring-slate-700/60">
           next tick in {nextIn}s
         </span>
-        {onInjectHazard && (
+        {onInjectHazard && session?.profile.role === "Admin" && (
           <div className="flex items-center gap-1 rounded-md bg-slate-900/60 px-1.5 py-1 ring-1 ring-amber-500/30">
             <span className="text-[9px] font-bold uppercase tracking-widest text-amber-300">
               Demo
@@ -88,6 +91,34 @@ export function Header({ summary, lastTick, tickMs, onInjectHazard }: Props) {
               title="Inject a CRITICAL spike on a random clean restroom for demo purposes"
             >
               Crit
+            </button>
+          </div>
+        )}
+        {session && (
+          <div className="flex items-center gap-2 rounded-md bg-slate-900/60 px-2 py-1 ring-1 ring-cyan-500/25">
+            <span
+              className={`grid h-6 w-6 place-items-center rounded-full text-[10px] font-bold ${
+                session.profile.role === "Admin"
+                  ? "bg-cyan-500/30 text-cyan-100 ring-1 ring-cyan-300/40"
+                  : "bg-slate-700/60 text-slate-100 ring-1 ring-slate-500/40"
+              }`}
+              title={session.profile.role}
+            >
+              {(session.profile.first_name?.[0] ?? "?") + (session.profile.last_name?.[0] ?? "")}
+            </span>
+            <div className="hidden text-[10px] leading-tight sm:block">
+              <div className="font-semibold text-slate-100">
+                {session.profile.full_name || session.profile.username}
+              </div>
+              <div className="text-[9px] uppercase tracking-widest text-cyan-300/70">
+                {session.profile.role} · {session.profile.csucc_id}
+              </div>
+            </div>
+            <button
+              onClick={() => void logout()}
+              className="rounded bg-slate-800/80 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-slate-200 ring-1 ring-slate-600/60 hover:bg-slate-700"
+            >
+              Sign Out
             </button>
           </div>
         )}

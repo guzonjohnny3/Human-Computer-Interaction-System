@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // CSUCC: keep the Django backend out of the frontend lint scope.
+    "backend/**",
   ]),
 ]);
 
