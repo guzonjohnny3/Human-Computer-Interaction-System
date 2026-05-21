@@ -70,7 +70,7 @@ export function LoginForm({ onShowSignUp }: Props) {
           <button
             type="button"
             onClick={() => setShowPassword((v) => !v)}
-            className="rounded-md px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-amber-200/70 hover:text-amber-100"
+            className="rounded-md px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-200/70 hover:text-emerald-100"
             aria-pressed={showPassword}
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
@@ -80,10 +80,10 @@ export function LoginForm({ onShowSignUp }: Props) {
       />
 
       <div className="flex items-center justify-between text-[11px]">
-        <label className="inline-flex select-none items-center gap-2 text-amber-200/65">
+        <label className="inline-flex select-none items-center gap-2 text-emerald-200/65">
           <input
             type="checkbox"
-            className="h-3.5 w-3.5 accent-amber-400"
+            className="h-3.5 w-3.5 accent-emerald-400"
             defaultChecked
           />
           Keep me signed in
@@ -92,7 +92,7 @@ export function LoginForm({ onShowSignUp }: Props) {
           href="#"
           tabIndex={-1}
           aria-disabled
-          className="text-amber-200/70 hover:text-amber-100 hover:underline"
+          className="text-emerald-200/70 hover:text-emerald-100 hover:underline"
           onClick={(e) => e.preventDefault()}
         >
           Forgot password?
@@ -111,7 +111,7 @@ export function LoginForm({ onShowSignUp }: Props) {
       <button
         type="submit"
         disabled={!canSubmit}
-        className="csucc-cta mt-1 flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-amber-50"
+        className="csucc-cta mt-1 flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-emerald-50"
       >
         {busy ? (
           <>
@@ -124,12 +124,12 @@ export function LoginForm({ onShowSignUp }: Props) {
         )}
       </button>
 
-      <div className="mt-1 flex items-center justify-between rounded-xl border border-amber-200/10 bg-black/25 px-3 py-2 text-[11px] text-amber-200/75">
+      <div className="mt-1 flex items-center justify-between rounded-xl border border-emerald-200/10 bg-black/25 px-3 py-2 text-[11px] text-emerald-200/75">
         <span>New to the platform?</span>
         <button
           type="button"
           onClick={onShowSignUp}
-          className="rounded-lg border border-amber-300/40 bg-amber-300/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-100 transition hover:bg-amber-300/20"
+          className="rounded-lg border border-emerald-300/40 bg-emerald-300/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-100 transition hover:bg-emerald-300/20"
         >
           Create an account
         </button>

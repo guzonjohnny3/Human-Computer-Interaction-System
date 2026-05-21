@@ -99,8 +99,8 @@ export function CsuccCrest(props: SVGProps<SVGSVGElement>) {
     >
       <defs>
         <linearGradient id="csucc-crest-bg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#a52a2f" />
-          <stop offset="100%" stopColor="#4d1015" />
+          <stop offset="0%" stopColor="#15803d" />
+          <stop offset="100%" stopColor="#06321a" />
         </linearGradient>
         <linearGradient id="csucc-crest-gold" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#fde26b" />

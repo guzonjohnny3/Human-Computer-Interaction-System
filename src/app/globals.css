@@ -3,9 +3,10 @@
 :root {
   --background: #020617;
   --foreground: #e2e8f0;
-  /* CSUCC brand */
-  --csucc-maroon: #7e1f25;
-  --csucc-maroon-deep: #4d1015;
+  /* CSUCC brand — green-dominant campus palette */
+  --csucc-green: #0e6a37;
+  --csucc-green-deep: #06321a;
+  --csucc-emerald: #22c55e;
   --csucc-gold: #f5b500;
   --csucc-gold-soft: #f7c948;
 }
@@ -180,11 +181,11 @@ body {
 /* Slow-drifting aurora behind the auth split layout. */
 .csucc-aurora-bg {
   background:
-    radial-gradient(ellipse 60% 50% at 12% 20%, rgba(245, 181, 0, 0.18), transparent 60%),
-    radial-gradient(ellipse 50% 50% at 85% 12%, rgba(126, 31, 37, 0.45), transparent 65%),
-    radial-gradient(ellipse 60% 55% at 75% 95%, rgba(245, 181, 0, 0.13), transparent 60%),
-    radial-gradient(ellipse 50% 50% at 18% 85%, rgba(126, 31, 37, 0.40), transparent 65%),
-    linear-gradient(160deg, #160508 0%, #0a0205 45%, #050108 100%);
+    radial-gradient(ellipse 60% 50% at 12% 20%, rgba(34, 197, 94, 0.22), transparent 60%),
+    radial-gradient(ellipse 50% 50% at 85% 12%, rgba(14, 106, 55, 0.55), transparent 65%),
+    radial-gradient(ellipse 60% 55% at 75% 95%, rgba(245, 181, 0, 0.10), transparent 60%),
+    radial-gradient(ellipse 50% 50% at 18% 85%, rgba(6, 50, 26, 0.65), transparent 65%),
+    linear-gradient(160deg, #04140a 0%, #02100a 45%, #010906 100%);
 }
 
 /* Decorative drifting blobs layered on top of the gradient mesh. */
@@ -212,8 +213,8 @@ body {
 /* Subtle blueprint grid overlay used on the hero pane. */
 .csucc-grid-overlay {
   background-image:
-    linear-gradient(to right, rgba(245, 181, 0, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(245, 181, 0, 0.06) 1px, transparent 1px);
+    linear-gradient(to right, rgba(34, 197, 94, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(34, 197, 94, 0.08) 1px, transparent 1px);
   background-size: 56px 56px;
   mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
 }
@@ -247,17 +248,17 @@ body {
 .csucc-float-input:-webkit-autofill,
 .csucc-float-input:-webkit-autofill:hover,
 .csucc-float-input:-webkit-autofill:focus {
-  -webkit-text-fill-color: #fdf6e3;
-  -webkit-box-shadow: 0 0 0 1000px rgba(20, 5, 8, 0.6) inset;
-  caret-color: #f7c948;
+  -webkit-text-fill-color: #ecfdf5;
+  -webkit-box-shadow: 0 0 0 1000px rgba(4, 20, 10, 0.6) inset;
+  caret-color: #22c55e;
 }
 
 /* CSUCC brand gradient button used for primary CTA. */
 .csucc-cta {
-  background: linear-gradient(135deg, #7e1f25 0%, #b1392f 45%, #f5b500 130%);
+  background: linear-gradient(135deg, #06321a 0%, #0e6a37 40%, #22c55e 85%, #f5b500 135%);
   box-shadow:
-    0 12px 28px -10px rgba(245, 181, 0, 0.55),
-    0 8px 22px -8px rgba(126, 31, 37, 0.7),
+    0 12px 28px -10px rgba(34, 197, 94, 0.55),
+    0 8px 22px -8px rgba(14, 106, 55, 0.7),
     inset 0 1px 0 rgba(255, 255, 255, 0.16);
   position: relative;
   overflow: hidden;
@@ -270,7 +271,7 @@ body {
   background: linear-gradient(
     100deg,
     transparent 35%,
-    rgba(255, 245, 200, 0.4) 50%,
+    rgba(255, 245, 200, 0.35) 50%,
     transparent 65%
   );
   transform: translateX(-120%);
@@ -301,8 +302,8 @@ body {
   inset: 0;
   border-radius: inherit;
   background:
-    radial-gradient(ellipse at top, rgba(245, 181, 0, 0.18), transparent 70%),
-    linear-gradient(160deg, rgba(126, 31, 37, 0.45), rgba(126, 31, 37, 0.15) 60%, transparent);
+    radial-gradient(ellipse at top, rgba(245, 181, 0, 0.14), transparent 70%),
+    linear-gradient(160deg, rgba(14, 106, 55, 0.55), rgba(6, 50, 26, 0.25) 60%, transparent);
   pointer-events: none;
 }
 
@@ -325,8 +326,8 @@ body {
 .csucc-spinner {
   width: 1rem;
   height: 1rem;
-  border: 2px solid rgba(255, 245, 200, 0.35);
-  border-top-color: #fdf6e3;
+  border: 2px solid rgba(220, 252, 231, 0.35);
+  border-top-color: #ecfdf5;
   border-radius: 999px;
   animation: csucc-spin 0.8s linear infinite;
 }

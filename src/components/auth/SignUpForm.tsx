@@ -236,7 +236,7 @@ export function SignUpForm({ onShowLogin }: Props) {
             <button
               type="button"
               onClick={() => setShowPw((v) => !v)}
-              className="rounded-md px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-amber-200/70 hover:text-amber-100"
+              className="rounded-md px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-200/70 hover:text-emerald-100"
               aria-pressed={showPw}
               aria-label={showPw ? "Hide password" : "Show password"}
             >
@@ -258,8 +258,8 @@ export function SignUpForm({ onShowLogin }: Props) {
         />
       </div>
 
-      <fieldset className="grid gap-3 rounded-2xl border border-amber-200/15 bg-black/25 p-4">
-        <legend className="flex items-center gap-2 px-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-amber-200/80">
+      <fieldset className="grid gap-3 rounded-2xl border border-emerald-200/15 bg-black/25 p-4">
+        <legend className="flex items-center gap-2 px-2 text-[10px] font-semibold uppercase tracking-[0.3em] text-emerald-200/80">
           <IconKey className="h-3.5 w-3.5" />
           Security Questions
         </legend>
@@ -320,7 +320,7 @@ export function SignUpForm({ onShowLogin }: Props) {
       <button
         type="submit"
         disabled={!canSubmit || busy}
-        className="csucc-cta mt-1 flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-amber-50"
+        className="csucc-cta mt-1 flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-emerald-50"
       >
         {busy ? (
           <>
@@ -333,12 +333,12 @@ export function SignUpForm({ onShowLogin }: Props) {
         )}
       </button>
 
-      <div className="mt-1 flex items-center justify-between rounded-xl border border-amber-200/10 bg-black/25 px-3 py-2 text-[11px] text-amber-200/75">
+      <div className="mt-1 flex items-center justify-between rounded-xl border border-emerald-200/10 bg-black/25 px-3 py-2 text-[11px] text-emerald-200/75">
         <span>Already have an account?</span>
         <button
           type="button"
           onClick={onShowLogin}
-          className="rounded-lg border border-amber-300/40 bg-amber-300/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-100 transition hover:bg-amber-300/20"
+          className="rounded-lg border border-emerald-300/40 bg-emerald-300/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-100 transition hover:bg-emerald-300/20"
         >
           Back to Sign In
         </button>
@@ -361,22 +361,22 @@ function SectionTitle({
   return (
     <div className="mt-1 flex items-center gap-3">
       <span
-        className="grid h-7 w-7 flex-none place-items-center rounded-full text-[10px] font-bold text-amber-50"
+        className="grid h-7 w-7 flex-none place-items-center rounded-full text-[10px] font-bold text-emerald-50"
         style={{
           background:
-            "linear-gradient(135deg, rgba(245,181,0,0.95), rgba(126,31,37,0.85))",
-          boxShadow: "0 4px 14px -4px rgba(245,181,0,0.55)",
+            "linear-gradient(135deg, rgba(34,197,94,0.9), rgba(14,106,55,0.95))",
+          boxShadow: "0 4px 14px -4px rgba(34,197,94,0.55)",
         }}
         aria-hidden
       >
         {index}
       </span>
       <div>
-        <p className="text-[12px] font-semibold uppercase tracking-[0.28em] text-amber-200">
+        <p className="text-[12px] font-semibold uppercase tracking-[0.28em] text-emerald-200">
           {title}
         </p>
         {children && (
-          <p className="text-[11px] text-amber-100/55">{children}</p>
+          <p className="text-[11px] text-emerald-100/55">{children}</p>
         )}
       </div>
     </div>
@@ -404,8 +404,8 @@ function RolePillar({
       className={[
         "csucc-role-pillar relative rounded-2xl border px-3 py-3 text-left transition",
         active
-          ? "border-amber-300/60 text-amber-50"
-          : "border-amber-200/15 bg-black/25 text-amber-100/70 hover:border-amber-200/40 hover:text-amber-50",
+          ? "border-emerald-300/60 text-emerald-50"
+          : "border-emerald-200/15 bg-black/25 text-emerald-100/70 hover:border-emerald-200/40 hover:text-emerald-50",
       ].join(" ")}
     >
       <div className="relative flex items-center gap-3">
@@ -413,8 +413,8 @@ function RolePillar({
           className={[
             "grid h-9 w-9 flex-none place-items-center rounded-xl",
             active
-              ? "bg-gradient-to-br from-[#f5b500] to-[#7e1f25] text-amber-50 shadow-[0_6px_20px_-6px_rgba(245,181,0,0.6)]"
-              : "bg-black/40 text-amber-200/70",
+              ? "bg-gradient-to-br from-[#22c55e] to-[#06321a] text-emerald-50 shadow-[0_6px_20px_-6px_rgba(34,197,94,0.6)]"
+              : "bg-black/40 text-emerald-200/70",
           ].join(" ")}
           aria-hidden
         >
@@ -424,12 +424,12 @@ function RolePillar({
           <div className="flex items-center gap-2">
             <p className="text-sm font-semibold tracking-wide">{title}</p>
             {active && (
-              <span className="rounded-full bg-amber-300/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-200">
+              <span className="rounded-full bg-emerald-300/20 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-emerald-200">
                 Selected
               </span>
             )}
           </div>
-          <p className="truncate text-[11px] text-amber-100/55">{subtitle}</p>
+          <p className="truncate text-[11px] text-emerald-100/55">{subtitle}</p>
         </div>
       </div>
     </button>
@@ -458,15 +458,15 @@ function FloatingSelect({
     <div className="grid gap-1.5">
       <div
         className={[
-          "group relative rounded-xl border bg-[rgba(20,5,8,0.55)] backdrop-blur-sm transition",
+          "group relative rounded-xl border bg-[rgba(4,20,10,0.55)] backdrop-blur-sm transition",
           error
             ? "border-red-400/60 focus-within:border-red-300 focus-within:ring-2 focus-within:ring-red-400/30"
-            : "border-amber-200/15 focus-within:border-amber-300/60 focus-within:ring-2 focus-within:ring-amber-300/25 hover:border-amber-200/25",
+            : "border-emerald-200/15 focus-within:border-emerald-300/60 focus-within:ring-2 focus-within:ring-emerald-300/25 hover:border-emerald-200/25",
         ].join(" ")}
       >
         <label
           htmlFor={id}
-          className="absolute -top-2 left-3 z-10 select-none bg-[#160508] px-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-200/85"
+          className="absolute -top-2 left-3 z-10 select-none bg-[#04140a] px-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200/85"
         >
           {label}
         </label>
@@ -475,17 +475,17 @@ function FloatingSelect({
           name={name}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="block w-full appearance-none bg-transparent py-3 pl-4 pr-9 text-[13px] text-amber-50 outline-none"
+          className="block w-full appearance-none bg-transparent py-3 pl-4 pr-9 text-[13px] text-emerald-50 outline-none"
         >
           {options.map((o) => (
-            <option key={o.key} value={o.key} disabled={o.disabled} className="bg-[#160508] text-amber-100">
+            <option key={o.key} value={o.key} disabled={o.disabled} className="bg-[#04140a] text-emerald-100">
               {o.label}
             </option>
           ))}
         </select>
         <span
           aria-hidden
-          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-amber-200/60"
+          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-emerald-200/60"
         >
           <IconChevron className="h-4 w-4 rotate-90" />
         </span>
