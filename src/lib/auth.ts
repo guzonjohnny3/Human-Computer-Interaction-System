@@ -77,7 +77,7 @@ export class AuthError extends Error {
 
 function api(path: string): string {
   const base = backendUrl();
-  if (!base) throw new AuthError("Backend not configured.");
+  if (base === null) throw new AuthError("Backend not configured.");
   return `${base}${path}`;
 }
 

@@ -5,6 +5,9 @@ import { useState } from "react";
 import { useAuth, fieldErrorsOf } from "@/hooks/useAuth";
 import { formatCsuccId } from "@/lib/auth";
 
+import { FloatingField } from "./FloatingField";
+import { IconBadge, IconChevron, IconLock } from "./icons";
+
 interface Props {
   onShowSignUp: () => void;
 }
@@ -13,10 +16,13 @@ export function LoginForm({ onShowSignUp }: Props) {
   const { login } = useAuth();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   function onChangeIdentifier(v: string) {
+    /* When the user is typing digits/dash only we auto-format as a CSUCC
+       ID; otherwise we pass the value through (so emails work too). */
     setIdentifier(/^[0-9-]*$/.test(v) ? formatCsuccId(v) : v);
   }
 
@@ -35,89 +41,99 @@ export function LoginForm({ onShowSignUp }: Props) {
     }
   }
 
-  return (
-    <form
-      onSubmit={onSubmit}
-      className="grid gap-4"
-      autoComplete="on"
-      aria-busy={busy}
-    >
-      <Field
-        label="CSUCC ID or Institutional Email"
-        htmlFor="identifier"
-        hint="Use xxxxxx-xxxxxx or your @csucc.edu.ph address"
-      >
-        <input
-          id="identifier"
-          className={inputCls}
-          value={identifier}
-          onChange={(e) => onChangeIdentifier(e.target.value)}
-          placeholder="202300-000001 or juan.delacruz@csucc.edu.ph"
-          autoComplete="username"
-          required
-        />
-      </Field>
+  const canSubmit = !!identifier && !!password && !busy;
 
-      <Field label="Password" htmlFor="password">
-        <input
-          id="password"
-          type="password"
-          className={inputCls}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
-          required
-          minLength={8}
-        />
-      </Field>
+  return (
+    <form onSubmit={onSubmit} className="grid gap-4" autoComplete="on" aria-busy={busy}>
+      <FloatingField
+        name="identifier"
+        label="CSUCC ID or Institutional Email"
+        autoComplete="username"
+        leadingIcon={<IconBadge className="h-4 w-4" />}
+        value={identifier}
+        onChange={(e) => onChangeIdentifier(e.target.value)}
+        hint="Use xxxxxx-xxxxxx or your @csucc.edu.ph address"
+        required
+      />
+
+      <FloatingField
+        name="password"
+        type={showPassword ? "text" : "password"}
+        label="Password"
+        autoComplete="current-password"
+        leadingIcon={<IconLock className="h-4 w-4" />}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        minLength={8}
+        required
+        rightAdornment={
+          <button
+            type="button"
+            onClick={() => setShowPassword((v) => !v)}
+            className="rounded-md px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-200/70 hover:text-emerald-100"
+            aria-pressed={showPassword}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? "Hide" : "Show"}
+          </button>
+        }
+      />
+
+      <div className="flex items-center justify-between text-[11px]">
+        <label className="inline-flex select-none items-center gap-2 text-emerald-200/65">
+          <input
+            type="checkbox"
+            className="h-3.5 w-3.5 accent-emerald-400"
+            defaultChecked
+          />
+          Keep me signed in
+        </label>
+        <a
+          href="#"
+          tabIndex={-1}
+          aria-disabled
+          className="text-emerald-200/70 hover:text-emerald-100 hover:underline"
+          onClick={(e) => e.preventDefault()}
+        >
+          Forgot password?
+        </a>
+      </div>
 
       {error && (
-        <div className="rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-xs text-red-200">
+        <div
+          role="alert"
+          className="rounded-xl border border-red-400/40 bg-red-500/10 px-3 py-2 text-xs text-red-200"
+        >
           {error}
         </div>
       )}
 
       <button
         type="submit"
-        disabled={busy || !identifier || !password}
-        className="mt-1 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 ring-1 ring-cyan-400/50 transition hover:from-cyan-400 hover:to-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+        disabled={!canSubmit}
+        className="csucc-cta mt-1 flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-emerald-50"
       >
-        {busy ? "Signing in…" : "Sign In"}
+        {busy ? (
+          <>
+            <span className="csucc-spinner" /> Signing in…
+          </>
+        ) : (
+          <>
+            Sign In <IconChevron className="h-4 w-4" />
+          </>
+        )}
       </button>
 
-      <div className="mt-2 flex items-center justify-between text-xs text-slate-400">
-        <span>Don&apos;t have an account?</span>
+      <div className="mt-1 flex items-center justify-between rounded-xl border border-emerald-200/10 bg-black/25 px-3 py-2 text-[11px] text-emerald-200/75">
+        <span>New to the platform?</span>
         <button
           type="button"
           onClick={onShowSignUp}
-          className="rounded-md border border-cyan-400/40 bg-cyan-500/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-cyan-200 hover:bg-cyan-500/20"
+          className="rounded-lg border border-emerald-300/40 bg-emerald-300/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-100 transition hover:bg-emerald-300/20"
         >
-          Sign Up
+          Create an account
         </button>
       </div>
     </form>
-  );
-}
-
-const inputCls =
-  "w-full rounded-lg border border-slate-700/60 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 outline-none ring-cyan-500/30 focus:border-cyan-400/60 focus:ring-2";
-
-function Field({
-  label,
-  htmlFor,
-  hint,
-  children,
-}: {
-  label: string;
-  htmlFor: string;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label htmlFor={htmlFor} className="grid gap-1.5 text-xs font-medium text-slate-300">
-      <span>{label}</span>
-      {children}
-      {hint && <span className="text-[10px] font-normal text-slate-500">{hint}</span>}
-    </label>
   );
 }

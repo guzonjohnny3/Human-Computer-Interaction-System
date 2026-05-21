@@ -20,13 +20,16 @@ import type {
 
 const RAW_URL = process.env.NEXT_PUBLIC_BACKEND_URL?.trim();
 
-/** Returns null when no backend is configured. */
+/**
+ * Returns the backend base URL.
+ *  - If NEXT_PUBLIC_BACKEND_URL is set, strip basic-auth credentials and use it.
+ *  - If unset, return "" so requests stay same-origin (the Django app may be
+ *    serving the static frontend itself, in which case relative paths work).
+ *  - Returns null only when the env is invalid (parsing failed).
+ */
 export function backendUrl(): string | null {
-  if (!RAW_URL) return null;
+  if (!RAW_URL) return "";
   try {
-    // Strip any embedded basic-auth credentials from the URL (we send them
-    // via the Authorization header instead — some browsers refuse to forward
-    // user:pass@ to fetch).
     const u = new URL(RAW_URL);
     u.username = "";
     u.password = "";
@@ -124,7 +127,7 @@ export interface BackendCleaningRow {
 
 async function getJson<T>(path: string): Promise<T> {
   const base = backendUrl();
-  if (!base) throw new Error("backend not configured");
+  if (base === null) throw new Error("backend not configured");
   const res = await fetch(`${base}${path}`, {
     method: "GET",
     headers: { ...authHeader() },
@@ -136,7 +139,7 @@ async function getJson<T>(path: string): Promise<T> {
 
 async function postJson<T>(path: string, body: unknown): Promise<T> {
   const base = backendUrl();
-  if (!base) throw new Error("backend not configured");
+  if (base === null) throw new Error("backend not configured");
   const res = await fetch(`${base}${path}`, {
     method: "POST",
     headers: {

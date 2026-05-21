@@ -61,10 +61,39 @@ Open <http://localhost:3000>. The dashboard self-seeds with 3 hours of history; 
 
 ```bash
 npm run dev     # start dev server
-npm run build   # production build
+npm run build   # production build (writes static export to ./out)
 npm run start   # serve production build
 npm run lint    # eslint
 ```
+
+## Running with the Django backend (full stack)
+
+The repo also ships a Django REST backend (under `backend/`) that owns
+the simulation, AI models, alerts, and authentication. To avoid CORS
+preflight issues the Django app can serve the Next.js static export
+directly (same origin):
+
+```bash
+# 1. Build the frontend static export
+npm install
+NEXT_PUBLIC_BACKEND_URL="" npm run build      # writes ./out
+
+# 2. Boot the Django backend (it serves /api/* and / from ./out)
+cd backend
+uv sync                                       # one-time
+uv run python manage.py migrate
+CSUCC_FORCE_AUTOSTART=1 uv run python manage.py runserver 0.0.0.0:8000
+```
+
+Open <http://127.0.0.1:8000/> — login screen, sign-up, dashboard, map,
+alerts and janitor flows all run end-to-end.
+
+For ASGI deployment (e.g. Fly.io) use the FastAPI wrapper:
+```bash
+uv run uvicorn main:app --host 0.0.0.0 --port 8000
+```
+
+Set `DATABASE_URL=postgres://…` to switch from SQLite to PostgreSQL.
 
 ## Project layout
 
