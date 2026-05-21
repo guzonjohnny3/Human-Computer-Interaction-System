@@ -127,7 +127,7 @@ export interface BackendCleaningRow {
 
 async function getJson<T>(path: string): Promise<T> {
   const base = backendUrl();
-  if (!base) throw new Error("backend not configured");
+  if (base === null) throw new Error("backend not configured");
   const res = await fetch(`${base}${path}`, {
     method: "GET",
     headers: { ...authHeader() },
@@ -139,7 +139,7 @@ async function getJson<T>(path: string): Promise<T> {
 
 async function postJson<T>(path: string, body: unknown): Promise<T> {
   const base = backendUrl();
-  if (!base) throw new Error("backend not configured");
+  if (base === null) throw new Error("backend not configured");
   const res = await fetch(`${base}${path}`, {
     method: "POST",
     headers: {
